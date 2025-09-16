@@ -2,9 +2,7 @@
 defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 /**
- * Controller: User
- * 
- * Automatically generated via CLI.
+ * Controller: Customer
  */
 class crud_Controller extends Controller {
     public function __construct()
@@ -12,20 +10,42 @@ class crud_Controller extends Controller {
         parent::__construct();
         $this->call->model('crud_Model');
         $this->call->library('form_validation');
-
-        // $this->call->helper('message');
     }
 
-    public function read(){
-         $data['getAll'] = $this->crud_Model->getAll();
+      public function read() 
+    {
+        
+        $page = 1;
+        if(isset($_GET['page']) && ! empty($_GET['page'])) {
+            $page = $this->io->get('page');
+        }
+
+        $q = '';
+        if(isset($_GET['q']) && ! empty($_GET['q'])) {
+            $q = trim($this->io->get('q'));
+        }
+
+        $records_per_page = 3;
+
+        $all = $this->crud_Model->page($q, $records_per_page, $page);
+        $data['all'] = $all['records'];
+        $total_rows = $all['total_rows'];
+        $this->pagination->set_options([
+            'first_link'     => '⏮ First',
+            'last_link'      => 'Last ⏭',
+            'next_link'      => 'Next →',
+            'prev_link'      => '← Prev',
+            'page_delimiter' => '&page='
+        ]);
+        $this->pagination->set_theme('bootstrap'); // or 'tailwind', or 'custom'
+        $this->pagination->initialize($total_rows, $records_per_page, $page, site_url('/').'?q='.$q);
+        $data['page'] = $this->pagination->paginate();
         $this->call->view('index', $data);
     }
 
-
-  public function createUser()
-    {
+    public function createCustomer() {
         $this->form_validation
-            ->name('student_id')
+            ->name('customer_id')
                 ->required()
                 ->max_length(50)
             ->name('first_name')
@@ -34,45 +54,46 @@ class crud_Controller extends Controller {
             ->name('last_name')
                 ->required()
                 ->max_length(200)
-            ->name('course')
+            ->name('email')
                 ->required()
-                ->max_length(100);
+                ->max_length(150)
+            ->name('phone')
+                ->required()
+                ->max_length(15);
 
         if ($this->form_validation->run() == FALSE) {
             $errors = $this->form_validation->get_errors();
             setErrors($errors);
             redirect('/');
         } else {
-            $this->crud_Model->createUser([
-                'student_id' => $_POST['student_id'],
-                'first_name' => $_POST['first_name'],
-                'last_name'  => $_POST['last_name'],
-                'course'     => $_POST['course']
+            $this->crud_Model->insert([
+                'customer_id' => $_POST['customer_id'],
+                'first_name'  => $_POST['first_name'],
+                'last_name'   => $_POST['last_name'],
+                'email'       => $_POST['email'],
+                'phone'       => $_POST['phone']
             ]);
 
-            setMessage('success', 'Student registered successfully!');
+            setMessage('success', 'Customer registered successfully!');
             redirect('/');
         }
     }
 
-
-
-     public function updateUser($id){
-        $this->crud_Model->updateUser($id, [
-            'student_id' => $_POST['student_id'], // allow updating student_id too
-            'first_name' => $_POST['first_name'],
-            'last_name'  => $_POST['last_name'],
-            'course'     => $_POST['course'],
+    public function updateCustomer($id) {
+        $this->crud_Model->update($id, [
+            'customer_id' => $_POST['customer_id'],
+            'first_name'  => $_POST['first_name'],
+            'last_name'   => $_POST['last_name'],
+            'email'       => $_POST['email'],
+            'phone'       => $_POST['phone'],
         ]);
-        setMessage('success', 'Student updated successfully!');
+        setMessage('success', 'Customer updated successfully!');
         redirect('/');
     }
 
-
-     public function deleteUser($id){
-        $this->crud_Model->deleteUser($id);
-        setMessage('danger', 'Student deleted successfully!');
+    public function deleteCustomer($id) {
+        $this->crud_Model->delete($id);
+        setMessage('danger', 'Customer deleted successfully!');
         redirect('/');
     }
 }
-

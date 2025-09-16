@@ -16,7 +16,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
+ * The above copyright notice and this permission notice shall be ind in
  * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -45,6 +45,6 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 // Routes
 $router->get('/', 'crud_Controller::read');          // list + form view
-$router->post('/create-user', 'crud_Controller::createUser'); // register student
-$router->post('/update-user/{id}', 'crud_Controller::updateUser'); // update student
-$router->post('/delete-user/{id}', 'crud_Controller::deleteUser'); // delete student
+$router->post('/create-customer', 'crud_Controller::createCustomer'); // register student
+$router->post('/update-customer/{id}', 'crud_Controller::updateCustomer'); // update student
+$router->post('/delete-customer/{id}', 'crud_Controller::deleteCustomer'); // delete student
