@@ -4,7 +4,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 /**
  * Controller: Customer
  */
-class crud_Controller extends Controller {
+class Crud_Controller extends Controller {
     public function __construct()
     {
         parent::__construct();
